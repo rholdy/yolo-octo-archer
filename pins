@@ -1,0 +1,17 @@
+select DATE(pins.created_at), count(*) from pins
+left join
+boards on pins.board_id = boards.id
+where
+pins.pin_id is not null and boards.curriculum_map_id is null
+group by Month(pins.created_at), year(pins.created_at)
+
+
+select
+  DATE(created_at),
+  count(id)
+from
+  pins where pin_id is null
+group by Month(created_at), Year(created_at)
+
+
+
