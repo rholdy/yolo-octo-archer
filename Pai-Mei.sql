@@ -68,6 +68,106 @@ union all
 select count(*) as 'social media' from teachers where hear_about_us like "%social media%"
 
 
+-- count of item bank assessments by subject and bank
+
+select
+materials.subject_id,
+count(materials.id)
+from
+materials
+inner join
+item_materials on materials.id = item_materials.material_id
+inner join
+items on items.id = item_materials.item_id
+inner join
+qti_items on items.qti_item_id = qti_items.id
+where qti_items.bank_id = 1
+group by materials.subject_id
+
+
+-- MONTHLY REPORT
+
+-- Total Sign Ups
+select DAY(teachers.created_at), count(*)
+from teachers where (teachers.created_at like '2014-03-%')
+group by DATE(teachers.created_at)
+
+-- Premium Sign Ups
+select DAY(teachers.created_at) as 'day', count(*) as 'premium'
+FROM `teachers` INNER JOIN `schools` ON schools.id = teachers.school_id INNER JOIN `districts` ON districts.id = schools.district_id WHERE ((teachers.access_type=0 OR (teachers.access_type IS NULL AND (schools.access_type=0 OR schools.access_type IS NULL AND districts.access_type=0)))) and (teachers.created_at like '2014-03-%')
+group by DATE(teachers.created_at)
+
+-- Public Assessments
+select DAY(materials.created_at) as 'day', count(*) as 'common'
+from materials where (privacy_level = 0) and (collection_id is null) and (materials.created_at like '2014-03-%')
+group by DATE(materials.created_at)
+
+-- Private Assessments
+select DAY(materials.created_at) as 'day', count(*) as 'common'
+from materials where ((privacy_level > 0) or (collection_id is not null)) and (materials.created_at like '2014-03-%')
+group by DATE(materials.created_at)
+
+-- Mastery
+select DAY(scores.created_at) as 'day', count(*) as 'count'
+from scores
+where
+state = 'mastery' and
+scores.created_at like '2014-03-%'
+group by
+date(scores.created_at)
+
+--Near Mastery
+select DAY(scores.created_at) as 'day', count(*) as 'count'
+from scores
+where
+state = 'near_mastery' and
+scores.created_at like '2014-03-%'
+group by
+date(scores.created_at)
+
+--Remediation
+select DAY(scores.created_at) as 'day', count(*) as 'count'
+from scores
+where
+state = 'remediation' and
+scores.created_at like '2014-03-%'
+group by
+date(scores.created_at)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
