@@ -135,6 +135,21 @@ group by
 date(scores.created_at)
 
 
+-- Funnel Metrics
+
+select count(*) from teachers where (created_at between '2014-03-01' and '2014-04-01') and free_signup = 1
+union all
+select count(*) from teachers where (activated_at between '2014-03-01' and '2014-04-01')
+union all
+select count(*) from teachers where (created_at between '2014-03-01' and '2014-04-01') and (free_signup = 1) and (state = 'active')
+union all
+select count(*) from teachers where (activated_at between '2014-03-01' and '2014-04-01') and (free_signup = 1)
+union all
+SELECT count(*) AS "value" FROM `teachers` INNER JOIN `schools` ON `schools`.id = `teachers`.school_id INNER JOIN `districts` ON `districts`.id = `schools`.district_id WHERE ((teachers.access_type=0 OR (teachers.access_type IS NULL AND (schools.access_type=0 OR schools.access_type IS NULL AND districts.access_type=0))))
+union all
+SELECT count(*) AS "value" FROM `teachers` INNER JOIN `schools` ON `schools`.id = `teachers`.school_id INNER JOIN `districts` ON `districts`.id = `schools`.district_id WHERE ((teachers.free_signup=1 AND (teachers.access_type=0 OR (teachers.access_type IS NULL AND (schools.access_type=0 OR schools.access_type IS NULL AND districts.access_type=0))))
+
+
 
 
 
